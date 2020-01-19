@@ -1,17 +1,16 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import React from 'react';
-import { Sudoku } from '../utils/Sudoku';
+import React, { useState } from 'react';
+import { Game } from '../utils/Sudoku';
 
-const sudoku = new Sudoku();
-console.log(JSON.parse(JSON.stringify(sudoku.display.values)));
-console.log(sudoku.display.filled());
-sudoku.display.test();
-console.log(JSON.parse(JSON.stringify(sudoku.display.values)));
-console.log(sudoku.display.filled());
-console.log(sudoku.solution.values);
+const sudoku = new Game();
 
+const setField = (row: number, col: number, value: number): number[][] => {
+  sudoku.display.values[row][col] = value;
+  return sudoku.display.values;
+}
 
 const Home: React.FC = () => {
+  const [fields, setFields] = useState(sudoku.display.values);
   return (
     <IonPage>
       <IonHeader>
@@ -20,7 +19,7 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        This is a Sudoku App.
+        {JSON.stringify(fields, null, 4)}
       </IonContent>
     </IonPage>
   );

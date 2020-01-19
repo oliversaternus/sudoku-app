@@ -1,27 +1,26 @@
 import { shuffle } from "./utils";
 
-export class Sudoku {
-    display: Field;
-    solution: Field;
+export class Game {
+    display: Sudoku;
+    solution: Sudoku;
     solved = false;
 
     constructor() {
-        this.solution = new Field();
+        this.solution = new Sudoku();
         this.solution.seed();
-        console.log(JSON.parse(JSON.stringify(this.solution.values)));
         this.solved = this.solution.solve(0, 0);
-        this.display = new Field(this.solution);
+        this.display = new Sudoku(this.solution);
         this.display.generate();
     }
 }
 
-export class Field {
+export class Sudoku {
     values: number[][];
     solveCount = 0;
-    difficuly = 0.5;
+    difficulty = 0.9; // 0.56; // 0.44;
 
-    constructor(field?: Field) {
-        this.values = field ? JSON.parse(JSON.stringify(field.values)) :
+    constructor(Sudoku?: Sudoku) {
+        this.values = Sudoku ? JSON.parse(JSON.stringify(Sudoku.values)) :
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -153,19 +152,21 @@ export class Field {
         }
         shuffle(order);
         for (let i = 0; i < 81; i++) {
-            const row = Math.floor(order[i] / 9);
-            const col = order[i] % 9;
-            const temp = this.values[row][col];
-            this.values[row][col] = 0;
-            if (!this.isSolvable()) {
-                this.values[row][col] = temp;
+            if (Math.random() < (this.difficulty + 0.25)) {
+                const row = Math.floor(order[i] / 9);
+                const col = order[i] % 9;
+                const temp = this.values[row][col];
+                this.values[row][col] = 0;
+                if (!this.isSolvable()) {
+                    this.values[row][col] = temp;
+                }
             }
         }
         return true;
     }
 
-    test = () => {
-        for (let i = 0; i < 8; i++) {
+    solveDeductive = () => {
+        for (let i = 0; i < Math.floor(this.difficulty * this.difficulty * 10); i++) {
             for (let p = 0; p < 9; p++) {
                 for (let q = 0; q < 9; q++) {
                     if (this.values[p][q] === 0) {
@@ -198,7 +199,7 @@ export class Field {
             }
             values.push(row);
         }
-        this.test();
+        this.solveDeductive();
         const solvable = this.filled() === 81;
         for (let x = 0; x < 9; x++) {
             for (let y = 0; y < 9; y++) {
