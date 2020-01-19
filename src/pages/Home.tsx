@@ -3,9 +3,12 @@ import React from 'react';
 import { Sudoku } from '../utils/Sudoku';
 
 const sudoku = new Sudoku();
-console.log(sudoku.solution.values);
-console.log(sudoku.display.values);
+console.log(JSON.parse(JSON.stringify(sudoku.display.values)));
 console.log(sudoku.display.filled());
+sudoku.display.test();
+console.log(JSON.parse(JSON.stringify(sudoku.display.values)));
+console.log(sudoku.display.filled());
+console.log(sudoku.solution.values);
 
 
 const Home: React.FC = () => {

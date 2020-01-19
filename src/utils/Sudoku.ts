@@ -8,9 +8,10 @@ export class Sudoku {
     constructor() {
         this.solution = new Field();
         this.solution.seed();
+        console.log(JSON.parse(JSON.stringify(this.solution.values)));
         this.solved = this.solution.solve(0, 0);
         this.display = new Field(this.solution);
-        this.display.generate2();
+        this.display.generate();
     }
 }
 
@@ -20,7 +21,7 @@ export class Field {
     difficuly = 0.5;
 
     constructor(field?: Field) {
-        this.values = field ? field.values :
+        this.values = field ? JSON.parse(JSON.stringify(field.values)) :
             [
                 [0, 0, 0, 0, 0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -96,17 +97,18 @@ export class Field {
         return false;
     }
 
-    checkUniqueness = (rowIndex: number, colIndex: number) => {
+    isUnique = (rowIndex: number, colIndex: number) => {
         const value = this.values[rowIndex][colIndex];
         this.values[rowIndex][colIndex] = 0;
+        let rowUnique = true;
+        let colUnique = true;
+        let blockUnique = true;
         for (let i = 0; i < 9; i++) {
             if (i !== rowIndex && this.values[i][colIndex] === 0 && this.isValid(value, i, colIndex)) {
-                this.values[rowIndex][colIndex] = value;
-                return false;
+                colUnique = false;
             }
             if (i !== colIndex && this.values[rowIndex][i] === 0 && this.isValid(value, rowIndex, i)) {
-                this.values[rowIndex][colIndex] = value;
-                return false;
+                rowUnique = false;
             }
         }
         const xBlock = Math.floor(rowIndex / 3) * 3;
@@ -116,13 +118,12 @@ export class Field {
                 const x = xBlock + i;
                 const y = yBlock + j;
                 if ((x !== rowIndex || y !== colIndex) && this.values[x][y] === 0 && this.isValid(value, x, y)) {
-                    this.values[rowIndex][colIndex] = value;
-                    return false;
+                    blockUnique = false;
                 }
             }
         }
         this.values[rowIndex][colIndex] = value;
-        return true;
+        return colUnique || rowUnique || blockUnique;
     }
 
     fillUnique = (rowIndex: number, colIndex: number) => {
@@ -154,46 +155,57 @@ export class Field {
         for (let i = 0; i < 81; i++) {
             const row = Math.floor(order[i] / 9);
             const col = order[i] % 9;
-            if (this.checkUniqueness(row, col)) {
-                this.values[row][col] = 0;
+            const temp = this.values[row][col];
+            this.values[row][col] = 0;
+            if (!this.isSolvable()) {
+                this.values[row][col] = temp;
             }
         }
         return true;
     }
 
-    generate2 = () => {
-        if (!this.solve(0, 0)) {
-            return false;
-        }
-        const order = [];
-        for (let i = 0; i < 81; i++) {
-            order.push(i);
-        }
-        shuffle(order);
-        for (let i = 0; i < 81; i++) {
-            const row = Math.floor(order[i] / 9);
-            const col = order[i] % 9;
-            const temp = this.values[row][col];
-            this.values[row][col] = 0;
-            const uniques = [];
-            for (let a = 0; a < 1; a++) {
-                for (let k = 0; k < 81; k++) {
-                    const p = Math.floor(order[k] / 9);
-                    const q = order[k] % 9;
-                    if (this.fillUnique(p, q)) {
-                        uniques.push([p, q]);
+    test = () => {
+        for (let i = 0; i < 8; i++) {
+            for (let p = 0; p < 9; p++) {
+                for (let q = 0; q < 9; q++) {
+                    if (this.values[p][q] === 0) {
+                        const candidates = [];
+                        for (let n = 1; n <= 9; n++) {
+                            if (this.isValid(n, p, q)) {
+                                candidates.push(n);
+                            }
+                        }
+                        for (let n = 0; n < candidates.length; n++) {
+                            this.values[p][q] = candidates[n];
+                            if (this.isUnique(p, q) || candidates.length === 1) {
+                                break;
+                            } else {
+                                this.values[p][q] = 0;
+                            }
+                        }
                     }
                 }
             }
-            this.values[row][col] = temp;
-            if (this.checkUniqueness(row, col)) {
-                this.values[row][col] = 0;
+        }
+    }
+
+    isSolvable = () => {
+        const values = [];
+        for (let x = 0; x < 9; x++) {
+            const row = []
+            for (let y = 0; y < 9; y++) {
+                row.push(this.values[x][y]);
             }
-            for (let l = 0; l < uniques.length; l++) {
-                this.values[uniques[l][0]][uniques[l][1]] = 0;
+            values.push(row);
+        }
+        this.test();
+        const solvable = this.filled() === 81;
+        for (let x = 0; x < 9; x++) {
+            for (let y = 0; y < 9; y++) {
+                this.values[x][y] = values[x][y];
             }
         }
-        return true;
+        return solvable;
     }
 
     seed = () => {
