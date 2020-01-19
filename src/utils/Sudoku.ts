@@ -1,19 +1,5 @@
 import { shuffle } from "./utils";
 
-export class Game {
-    display: Sudoku;
-    solution: Sudoku;
-    solved = false;
-
-    constructor() {
-        this.solution = new Sudoku();
-        this.solution.seed();
-        this.solved = this.solution.solve(0, 0);
-        this.display = new Sudoku(this.solution);
-        this.display.generate();
-    }
-}
-
 export class Sudoku {
     values: number[][];
     solveCount = 0;
