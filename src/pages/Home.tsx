@@ -9,7 +9,7 @@ const styles: any = {
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: '100%',
+    height: 'calc(100% - 96px)',
     backgroundColor: '#e8eff3'
   },
   row: {
@@ -40,21 +40,48 @@ const styles: any = {
   square: {
     backgroundColor: 'black',
     boxShadow: '0px 0px 12px rgba(0,0,0,0.7)'
+  },
+  selectContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: 96,
+    backgroundColor: '#ffffff',
+    boxShadow: '0px 0px 4px rgba(0,0,0,0.48)',
+    display: 'flex',
+    alignItems: 'center'
+  },
+  selectButton: {
+    width: 'calc((100% / 9) - 3px)',
+    height: 48,
+    margin: 2,
+    fontSize: 32,
+    border: '1px solid black',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
   }
 };
 
 const game = new Game();
 
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
 const calcFieldDimension = () => {
   const height = window.innerHeight;
   const width = window.innerWidth;
-  if (width < (height - 56)) {
+  if (width < (height - 152)) {
     return width - 32;
   }
-  return height - 88;
+  return height - 184;
 }
 
 const setField = (row: number, col: number, value: number): number[][] => {
+  if (row === -1 || col === -1) {
+    return game.display.values;
+  }
   game.setCell(row, col, value);
   return game.display.values;
 }
@@ -104,6 +131,14 @@ const Home: React.FC = () => {
                 </div>)
             })}
           </Square>
+        </div>
+        <div style={styles.selectContainer}>
+          {
+            numbers.map(num =>
+              <div key={num} onClick={() => setFields(JSON.parse(JSON.stringify(setField(selected[0], selected[1], num))))} style={styles.selectButton}>
+                {num}
+              </div>)
+          }
         </div>
       </IonContent>
     </IonPage>
