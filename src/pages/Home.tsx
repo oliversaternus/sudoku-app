@@ -9,7 +9,7 @@ const styles: any = {
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: 'calc(100% - 144px)',
+    height: 'calc(100% - 124px)',
     backgroundColor: '#e8eff3'
   },
   row: {
@@ -32,10 +32,12 @@ const styles: any = {
     cursor: 'pointer'
   },
   selected: {
-    backgroundColor: 'lightblue'
+    backgroundColor: '#3880ff',
+    color: '#ffffff'
   },
   fixed: {
-    cursor: 'auto'
+    cursor: 'auto',
+    backgroundColor: '#e8f0fa'
   },
   square: {
     backgroundColor: 'black',
@@ -46,22 +48,24 @@ const styles: any = {
     bottom: 0,
     left: 0,
     width: '100%',
-    height: 144,
-    backgroundColor: '#ffffff',
+    padding: 6,
+    height: 124,
+    backgroundColor: '#3880ff',
     boxShadow: '0px 0px 4px rgba(0,0,0,0.48)',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'flex-end'
   },
   selectButton: {
     width: 40,
     height: 40,
     margin: 2,
     fontSize: 28,
-    border: '1px solid black',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#ffffff',
+    borderRadius: 4,
     cursor: 'pointer',
   }
 };
@@ -73,10 +77,10 @@ const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const calcFieldDimension = () => {
   const height = window.innerHeight;
   const width = window.innerWidth;
-  if (width < (height - 200)) {
+  if (width < (height - 180)) {
     return width - 32;
   }
-  return height - 230;
+  return height - 210;
 }
 
 const setField = (row: number, col: number, value: number): number[][] => {
@@ -107,7 +111,7 @@ const Home: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar color="primary">
           <IonTitle>Sudoku</IonTitle>
         </IonToolbar>
       </IonHeader>
@@ -134,14 +138,12 @@ const Home: React.FC = () => {
           </Square>
         </div>
         <div style={styles.selectContainer}>
-          <div style={{display: 'flex', flexWrap: 'wrap', width: 132}}>
-            {
-              numbers.map(num =>
-                <div key={num} onClick={() => setFields(JSON.parse(JSON.stringify(setField(selected[0], selected[1], num))))} style={styles.selectButton}>
-                  {num}
-                </div>)
-            }
-          </div>
+          {
+            numbers.map(num =>
+              <div key={num} onClick={() => setFields([...setField(selected[0], selected[1], num)])} style={styles.selectButton}>
+                {num}
+              </div>)
+          }
         </div>
       </IonContent>
     </IonPage>

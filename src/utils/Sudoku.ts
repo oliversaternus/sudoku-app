@@ -111,23 +111,6 @@ export class Sudoku {
         return colUnique || rowUnique || blockUnique;
     }
 
-    fillUnique = (rowIndex: number, colIndex: number) => {
-        if (this.values[rowIndex][colIndex] !== 0) {
-            return false;
-        }
-        const candidates = [];
-        for (let i = 1; i < 9; i++) {
-            if (this.isValid(i, rowIndex, colIndex)) {
-                candidates.push(i);
-            }
-        }
-        if (candidates.length === 1) {
-            this.values[rowIndex][colIndex] = candidates[0];
-            return true;
-        }
-        return false;
-    }
-
     generate = () => {
         if (!this.solve(0, 0)) {
             return false;
