@@ -1,4 +1,5 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonIcon } from '@ionic/react';
+import { sync, undo, help } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react';
 import { Game } from '../utils/Game';
 
@@ -48,11 +49,18 @@ const styles: any = {
     bottom: 0,
     left: 0,
     width: '100%',
-    padding: 6,
     height: 124,
     backgroundColor: '#3880ff',
     boxShadow: '0px 0px 4px rgba(0,0,0,0.48)',
     display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'center'
+  },
+  selectRow: {
+    width: '100%',
+    display: 'flex',
+    padding: 6,
     justifyContent: 'center',
     alignItems: 'flex-end'
   },
@@ -67,6 +75,7 @@ const styles: any = {
     backgroundColor: '#ffffff',
     borderRadius: 4,
     cursor: 'pointer',
+    zIndex: 100
   }
 };
 
@@ -138,12 +147,25 @@ const Home: React.FC = () => {
           </Square>
         </div>
         <div style={styles.selectContainer}>
-          {
-            numbers.map(num =>
-              <div key={num} onClick={() => setFields([...setField(selected[0], selected[1], num)])} style={styles.selectButton}>
-                {num}
-              </div>)
-          }
+          <div style={styles.selectRow}>
+            {
+              numbers.map(num =>
+                <div key={num} onClick={() => setFields([...setField(selected[0], selected[1], num)])} style={styles.selectButton}>
+                  {num}
+                </div>)
+            }
+          </div>
+        </div>
+        <div style={styles.selectRow}>
+          <div style={styles.selectButton}>
+            <IonIcon style={{ fill: '#202020', width: 32, height: 32 }} icon={sync}></IonIcon>
+          </div>
+          <div style={styles.selectButton}>
+            <IonIcon style={{ fill: '#202020', width: 32, height: 32 }} icon={undo}></IonIcon>
+          </div>
+          <div style={styles.selectButton}>
+            <IonIcon style={{ fill: '#202020', width: 32, height: 32 }} icon={help}></IonIcon>
+          </div>
         </div>
       </IonContent>
     </IonPage>
