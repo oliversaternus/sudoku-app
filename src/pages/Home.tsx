@@ -67,6 +67,7 @@ const styles: any = {
   },
   selectRow: {
     width: '100%',
+    maxWidth: 396,
     display: 'flex',
     padding: 6,
     justifyContent: 'center',
@@ -94,10 +95,11 @@ const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const calcFieldDimension = () => {
   const height = window.innerHeight;
   const width = window.innerWidth;
+  let result = height - 200;
   if (width < (height - 170)) {
-    return width - 32;
+    result = width - 32;
   }
-  return height - 200;
+  return result > 480 ? 480 : result;
 }
 
 const setField = (row: number, col: number, value: number): number[][] => {
