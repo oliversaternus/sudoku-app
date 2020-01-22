@@ -15,6 +15,16 @@ export class Game {
         this.initial = new Sudoku(this.display);
     }
 
+    reset = (difficulty: number = 0.56) => {
+        this.solution = new Sudoku();
+        this.solution.seed();
+        this.solved = this.solution.solve(0, 0);
+        this.display = new Sudoku(this.solution);
+        this.display.difficulty = difficulty;
+        this.display.generate();
+        this.initial = new Sudoku(this.display);
+    }
+
     setCell = (row: number, col: number, value: number) => {
         if (this.initial.values[row][col] === 0) {
             this.display.values[row][col] = value;

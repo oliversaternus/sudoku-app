@@ -10,7 +10,7 @@ const styles: any = {
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    height: 'calc(100% - 124px)',
+    height: 'calc(100% - 114px)',
     backgroundColor: '#e8eff3'
   },
   row: {
@@ -38,7 +38,7 @@ const styles: any = {
   },
   fixed: {
     cursor: 'auto',
-    backgroundColor: '#e8f0fa'
+    backgroundColor: '#d8e2f0'
   },
   square: {
     backgroundColor: 'black',
@@ -49,12 +49,12 @@ const styles: any = {
     bottom: 0,
     left: 0,
     width: '100%',
-    height: 124,
+    height: 114,
     backgroundColor: '#3880ff',
     boxShadow: '0px 0px 4px rgba(0,0,0,0.48)',
     display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-end',
+    flexDirection: 'column-reverse',
+    justifyContent: 'flex-start',
     alignItems: 'center'
   },
   selectRow: {
@@ -74,8 +74,7 @@ const styles: any = {
     justifyContent: 'center',
     backgroundColor: '#ffffff',
     borderRadius: 4,
-    cursor: 'pointer',
-    zIndex: 100
+    cursor: 'pointer'
   }
 };
 
@@ -86,10 +85,10 @@ const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const calcFieldDimension = () => {
   const height = window.innerHeight;
   const width = window.innerWidth;
-  if (width < (height - 180)) {
+  if (width < (height - 170)) {
     return width - 32;
   }
-  return height - 210;
+  return height - 200;
 }
 
 const setField = (row: number, col: number, value: number): number[][] => {
@@ -97,6 +96,11 @@ const setField = (row: number, col: number, value: number): number[][] => {
     return game.display.values;
   }
   game.setCell(row, col, value);
+  return game.display.values;
+}
+
+const reset = (): number[][] => {
+  game.reset();
   return game.display.values;
 }
 
@@ -155,16 +159,16 @@ const Home: React.FC = () => {
                 </div>)
             }
           </div>
-        </div>
-        <div style={styles.selectRow}>
-          <div style={styles.selectButton}>
-            <IonIcon style={{ fill: '#202020', width: 32, height: 32 }} icon={sync}></IonIcon>
-          </div>
-          <div style={styles.selectButton}>
-            <IonIcon style={{ fill: '#202020', width: 32, height: 32 }} icon={undo}></IonIcon>
-          </div>
-          <div style={styles.selectButton}>
-            <IonIcon style={{ fill: '#202020', width: 32, height: 32 }} icon={help}></IonIcon>
+          <div style={{ ...styles.selectRow, justifyContent: 'flex-end' }}>
+            <div onClick={() => { setSelected([-1, -1]); setFields([...reset()]) }} style={styles.selectButton}>
+              <IonIcon style={{ fill: '#202020', width: 32, height: 32 }} icon={sync} />
+            </div>
+            <div style={styles.selectButton}>
+              <IonIcon style={{ fill: '#202020', width: 28, height: 28 }} icon={undo} />
+            </div>
+            <div style={styles.selectButton}>
+              <IonIcon style={{ fill: '#202020', width: 28, height: 28 }} icon={help} />
+            </div>
           </div>
         </div>
       </IonContent>
