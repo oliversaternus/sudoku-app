@@ -31,28 +31,6 @@ export class Game {
         }
     };
 
-    check = (): number[][] => {
-        const result = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0]
-        ];
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-                if (this.display.values[i][j] === this.solution.values[i][j] || this.display.values[i][j] === 0) {
-                    result[i][j] = 1;
-                }
-            }
-        }
-        return result;
-    };
-
     hint = () => {
         const coordinates = [];
         for (let i = 0; i < 9; i++) {

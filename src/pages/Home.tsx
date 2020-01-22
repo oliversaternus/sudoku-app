@@ -1,5 +1,5 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonIcon } from '@ionic/react';
-import { sync, undo, help } from 'ionicons/icons'
+import { sync, close, help } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react';
 import { Game } from '../utils/Game';
 
@@ -32,6 +32,14 @@ const styles: any = {
     justifyContent: 'center',
     cursor: 'pointer'
   },
+  correct: {
+    backgroundColor: 'green',
+    color: '#ffffff'
+  },
+  false: {
+    backgroundColor: 'red',
+    color: '#ffffff'
+  },
   selected: {
     backgroundColor: '#3880ff',
     color: '#ffffff'
@@ -62,7 +70,8 @@ const styles: any = {
     display: 'flex',
     padding: 6,
     justifyContent: 'center',
-    alignItems: 'flex-end'
+    alignItems: 'flex-end',
+    position: 'relative'
   },
   selectButton: {
     width: 40,
@@ -114,6 +123,7 @@ const Square: React.FC<{ size: number }> = (props) => {
 const Home: React.FC = () => {
   const [fields, setFields] = useState(game.display.values);
   const [selected, setSelected] = useState([-1, -1]);
+  const [showChecked, setShowChecked] = useState(false);
   const [maxSize, setMaxSize] = useState(calcFieldDimension());
 
   const onResize = () => { setMaxSize(calcFieldDimension()) };
@@ -138,9 +148,11 @@ const Home: React.FC = () => {
                   row.map((cell, colIndex: number) => {
                     const isFixed = game.initial.values[rowIndex][colIndex] !== 0;
                     const isSelected = rowIndex === selected[0] && colIndex === selected[1];
+                    const isCorrect = cell && !isFixed && game.display.values[rowIndex][colIndex] === game.solution.values[rowIndex][colIndex];
                     let cellStyle = isSelected ? { ...styles.cell, ...styles.selected } : styles.cell;
                     cellStyle = isFixed ? { ...cellStyle, ...styles.fixed } : cellStyle;
                     cellStyle = colIndex && (colIndex % 3 === 0) ? { ...cellStyle, marginLeft: 2.5 } : cellStyle;
+                    cellStyle = (cell && !isFixed && showChecked) ? (isCorrect ? { ...cellStyle, ...styles.correct } : { ...cellStyle, ...styles.false }) : cellStyle;
                     return (
                       <div key={colIndex} style={{ ...cellStyle, fontSize: maxSize / 16 }} onClick={() => !isFixed && setSelected([rowIndex, colIndex])}>
                         {cell || ''}
@@ -159,14 +171,14 @@ const Home: React.FC = () => {
                 </div>)
             }
           </div>
-          <div style={{ ...styles.selectRow, justifyContent: 'flex-end' }}>
+          <div style={{ ...styles.selectRow, justifyContent: 'flex-start' }}>
+            <div style={{ ...styles.selectButton, position: 'absolute', right: 6, top: 6 }} onClick={() => setFields([...setField(selected[0], selected[1], 0)])}>
+              <IonIcon style={{ fill: '#202020', width: 28, height: 28 }} icon={close} />
+            </div>
             <div onClick={() => { setSelected([-1, -1]); setFields([...reset()]) }} style={styles.selectButton}>
               <IonIcon style={{ fill: '#202020', width: 32, height: 32 }} icon={sync} />
             </div>
-            <div style={styles.selectButton}>
-              <IonIcon style={{ fill: '#202020', width: 28, height: 28 }} icon={undo} />
-            </div>
-            <div style={styles.selectButton}>
+            <div style={styles.selectButton} onClick={() => setShowChecked(!showChecked)}>
               <IonIcon style={{ fill: '#202020', width: 28, height: 28 }} icon={help} />
             </div>
           </div>
