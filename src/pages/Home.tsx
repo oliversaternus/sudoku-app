@@ -180,8 +180,8 @@ const Home: React.FC = () => {
             <div onClick={() => { setSelected([-1, -1]); setFields([...reset()]) }} style={styles.selectButton}>
               <IonIcon style={{ fill: '#202020', width: 32, height: 32 }} icon={sync} />
             </div>
-            <div style={styles.selectButton} onClick={() => setShowChecked(!showChecked)}>
-              <IonIcon style={{ fill: '#202020', width: 28, height: 28 }} icon={help} />
+            <div style={{ ...styles.selectButton, ...(showChecked ? { backgroundColor: '#2a58a8' } : {}) }} onClick={() => setShowChecked(!showChecked)}>
+              <IonIcon style={{ fill: showChecked ? '#ffffff' : '#202020', width: 28, height: 28 }} icon={help} />
             </div>
           </div>
         </div>
