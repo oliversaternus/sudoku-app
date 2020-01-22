@@ -1,7 +1,7 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonIcon } from '@ionic/react';
 import { sync, close, help } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react';
-import { Game } from '../utils/Game';
+import { Game, State } from '../utils/Game';
 
 const styles: any = {
   container: {
@@ -102,30 +102,8 @@ const calcFieldDimension = () => {
   return result > 480 ? 480 : result;
 }
 
-const setField = (row: number, col: number, value: number): number[][] => {
-  if (row === -1 || col === -1) {
-    return game.display.values;
-  }
-  game.setCell(row, col, value);
-  return game.display.values;
-}
-
-const reset = (): number[][] => {
-  game.reset();
-  return game.display.values;
-}
-
-const Square: React.FC<{ size: number }> = (props) => {
-  return (
-    <div style={{ ...styles.square, width: props.size - 2, height: props.size - 2, padding: 1, paddingRight: 0.5, paddingLeft: 1.5 }}>
-      {props.children}
-    </div>);
-}
-
 const Home: React.FC = () => {
-  const [fields, setFields] = useState(game.display.values);
-  const [selected, setSelected] = useState([-1, -1]);
-  const [showChecked, setShowChecked] = useState(false);
+  const [gameState, setGameState] = useState(game.state);
   const [maxSize, setMaxSize] = useState(calcFieldDimension());
 
   const onResize = () => { setMaxSize(calcFieldDimension()) };
@@ -142,46 +120,44 @@ const Home: React.FC = () => {
       </IonHeader>
       <IonContent>
         <div style={styles.container}>
-          <Square size={maxSize}>
-            {fields.map((row, rowIndex: number) => {
+          <div style={{ ...styles.square, width: maxSize - 2, height: maxSize - 2, padding: 1, paddingRight: 0.5, paddingLeft: 1.5 }}>
+            {gameState.sudoku.map((row, rowIndex: number) => {
               const rowStyle = rowIndex && (rowIndex % 3 === 0) ? { ...styles.row, marginTop: 2.5 } : styles.row;
               return (
                 <div key={rowIndex} style={rowStyle}>{
                   row.map((cell, colIndex: number) => {
-                    const isFixed = game.initial.values[rowIndex][colIndex] !== 0;
-                    const isSelected = rowIndex === selected[0] && colIndex === selected[1];
-                    const isCorrect = cell && !isFixed && game.display.values[rowIndex][colIndex] === game.solution.values[rowIndex][colIndex];
-                    let cellStyle = isSelected ? { ...styles.cell, ...styles.selected } : styles.cell;
-                    cellStyle = isFixed ? { ...cellStyle, ...styles.fixed } : cellStyle;
+                    const isCorrect = cell.value === cell.solution;
+                    let cellStyle = gameState.selected === cell ? { ...styles.cell, ...styles.selected } : styles.cell;
+                    cellStyle = cell.fixed ? { ...cellStyle, ...styles.fixed } : cellStyle;
                     cellStyle = colIndex && (colIndex % 3 === 0) ? { ...cellStyle, marginLeft: 2.5 } : cellStyle;
-                    cellStyle = (cell && !isFixed && showChecked) ? (isCorrect ? { ...cellStyle, ...styles.correct } : { ...cellStyle, ...styles.false }) : cellStyle;
+                    cellStyle = (cell.value && !cell.fixed && gameState.showCheck) ? (isCorrect ? { ...cellStyle, ...styles.correct } : { ...cellStyle, ...styles.false }) : cellStyle;
                     return (
-                      <div key={colIndex} style={{ ...cellStyle, fontSize: maxSize / 16 }} onClick={() => !isFixed && setSelected([rowIndex, colIndex])}>
-                        {cell || ''}
+                      <div key={colIndex} style={{ ...cellStyle, fontSize: maxSize / 16 }} onClick={() => setGameState(game.selectCell(cell))}>
+                        {cell.value || ''}
                       </div>)
                   })}
                 </div>)
             })}
-          </Square>
+          </div>
         </div>
         <div style={styles.selectContainer}>
           <div style={styles.selectRow}>
             {
               numbers.map(num =>
-                <div key={num} onClick={() => setFields([...setField(selected[0], selected[1], num)])} style={styles.selectButton}>
+                <div key={num} onClick={() => setGameState(game.setValue(num))} style={styles.selectButton}>
                   {num}
                 </div>)
             }
           </div>
           <div style={{ ...styles.selectRow, justifyContent: 'flex-start' }}>
-            <div style={{ ...styles.selectButton, position: 'absolute', right: 6, top: 6 }} onClick={() => setFields([...setField(selected[0], selected[1], 0)])}>
+            <div style={{ ...styles.selectButton, position: 'absolute', right: 6, top: 6 }} onClick={() => setGameState(game.setValue(0))}>
               <IonIcon style={{ fill: '#202020', width: 28, height: 28 }} icon={close} />
             </div>
-            <div onClick={() => { setSelected([-1, -1]); setFields([...reset()]) }} style={styles.selectButton}>
+            <div onClick={() => setGameState(game.reset())} style={styles.selectButton}>
               <IonIcon style={{ fill: '#202020', width: 32, height: 32 }} icon={sync} />
             </div>
-            <div style={{ ...styles.selectButton, ...(showChecked ? { backgroundColor: '#2a58a8' } : {}) }} onClick={() => setShowChecked(!showChecked)}>
-              <IonIcon style={{ fill: showChecked ? '#ffffff' : '#202020', width: 28, height: 28 }} icon={help} />
+            <div style={{ ...styles.selectButton, ...(gameState.showCheck ? { backgroundColor: '#2a58a8' } : {}) }} onClick={() => setGameState(game.toggleCheck())}>
+              <IonIcon style={{ fill: gameState.showCheck ? '#ffffff' : '#202020', width: 28, height: 28 }} icon={help} />
             </div>
           </div>
         </div>

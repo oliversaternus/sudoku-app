@@ -1,49 +1,87 @@
-import { shuffle } from "./utils";
 import { Sudoku } from "./Sudoku";
+
+export interface Cell {
+    row: number;
+    col: number;
+    selected: boolean;
+    solution: number;
+    value: number;
+    fixed: boolean;
+}
+
+export interface State {
+    sudoku: Cell[][];
+    selected?: Cell;
+    showCheck: boolean;
+}
+
 export class Game {
-    display: Sudoku;
-    solution: Sudoku;
-    initial: Sudoku;
-    solved = false;
+    state: State;
 
     constructor() {
-        this.solution = new Sudoku();
-        this.solution.seed();
-        this.solved = this.solution.solve(0, 0);
-        this.display = new Sudoku(this.solution);
-        this.display.generate();
-        this.initial = new Sudoku(this.display);
+        this.state = {
+            sudoku: [[], [], [], [], [], [], [], [], []],
+            selected: undefined,
+            showCheck: false
+        };
+        this.reset();
     }
 
-    reset = (difficulty: number = 0.56) => {
-        this.solution = new Sudoku();
-        this.solution.seed();
-        this.solved = this.solution.solve(0, 0);
-        this.display = new Sudoku(this.solution);
-        this.display.difficulty = difficulty;
-        this.display.generate();
-        this.initial = new Sudoku(this.display);
-    }
-
-    setCell = (row: number, col: number, value: number) => {
-        if (this.initial.values[row][col] === 0) {
-            this.display.values[row][col] = value;
-        }
-    };
-
-    hint = () => {
-        const coordinates = [];
+    reset = (difficulty: number = 0.56): State => {
+        this.state = {
+            sudoku: [[], [], [], [], [], [], [], [], []],
+            selected: undefined,
+            showCheck: false
+        };
+        const solution = new Sudoku();
+        solution.difficulty = difficulty;
+        solution.seed();
+        solution.solve(0, 0);
         for (let i = 0; i < 9; i++) {
             for (let j = 0; j < 9; j++) {
-                if (this.display.values[i][j] === 0) {
-                    coordinates.push([i, j]);
-                }
+                this.state.sudoku[i].push({
+                    row: i,
+                    col: j,
+                    selected: false,
+                    solution: solution.values[i][j],
+                    value: 0,
+                    fixed: false
+                });
             }
         }
-        if (coordinates.length === 0) {
-            return;
+        solution.generate();
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                this.state.sudoku[i][j].value = solution.values[i][j];
+                this.state.sudoku[i][j].fixed = !!solution.values[i][j];
+            }
         }
-        shuffle(coordinates);
-        this.display.values[coordinates[0][0]][coordinates[0][1]] = this.solution.values[coordinates[0][0]][coordinates[0][1]]
+        return this.state;
+    }
+
+    setValue = (value: number): State => {
+        const result: State = { ...this.state };
+        if (!result.selected) {
+            return result;
+        }
+        result.sudoku[result.selected.row][result.selected.col].value = value;
+        return result;
+    }
+
+    selectCell = (cell: Cell): State => {
+        if (cell.fixed) {
+            return { ...this.state };
+        }
+        if (this.state.selected) {
+            this.state.selected.selected = false;
+        }
+        cell.selected = true;
+        this.state.selected = cell;
+        return { ...this.state };
+    }
+
+    toggleCheck = (): State => {
+        this.state.showCheck = !this.state.showCheck;
+        return { ...this.state };
     };
 }
