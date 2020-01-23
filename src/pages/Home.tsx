@@ -2,6 +2,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonIcon } from '@
 import { sync, close, help } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react';
 import { Game, State } from '../utils/Game';
+import classes from "./Home.module.css";
 
 const styles: any = {
   container: {
@@ -119,7 +120,7 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <div style={styles.container}>
+        <div className={classes.container}>
           <div style={{ ...styles.square, width: maxSize - 2, height: maxSize - 2, padding: 1, paddingRight: 0.5, paddingLeft: 1.5 }}>
             {gameState.sudoku.map((row, rowIndex: number) => {
               const rowStyle = rowIndex && (rowIndex % 3 === 0) ? { ...styles.row, marginTop: 2.5 } : styles.row;
@@ -140,8 +141,8 @@ const Home: React.FC = () => {
             })}
           </div>
         </div>
-        <div style={styles.selectContainer}>
-          <div style={styles.selectRow}>
+        <div className={classes.selectContainer}>
+          <div className={classes.selectRow}>
             {
               numbers.map(num =>
                 <div key={num} onClick={() => setGameState(game.setValue(num))} style={styles.selectButton}>
