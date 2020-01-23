@@ -52,6 +52,21 @@
 .square {
     background-color: black;
     box-shadow: 0px 0px 12px rgba(0,0,0,0.7);
+    padding: 1px;
+    padding-right: 0.5px;
+    padding-left: 1.5px;
+  }
+
+  .iconSmall {
+    fill: #202020;
+    width: 28px;
+    height: 28px;
+  }
+
+  .iconMid {
+    fill: #202020;
+    width: 32px;
+    height: 32px;
   }
 
 .selectContainer {
