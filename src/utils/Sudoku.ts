@@ -3,7 +3,7 @@ import { shuffle } from "./utils";
 export class Sudoku {
     values: number[][];
     solveCount = 0;
-    difficulty = 0.9; // 0.56; // 0.44;
+    difficulty = 0.9;
 
     constructor(Sudoku?: Sudoku) {
         this.values = Sudoku ? JSON.parse(JSON.stringify(Sudoku.values)) :
