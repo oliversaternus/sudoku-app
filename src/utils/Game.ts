@@ -19,6 +19,20 @@ export class Game {
     state: State;
 
     constructor() {
+        const savedState = localStorage.getItem('sudokuGameState');
+        if (savedState) {
+            this.state = {
+                ...JSON.parse(savedState),
+                selected: undefined,
+                showCheck: false
+            };
+            for (const row of this.state.sudoku) {
+                for (const cell of row) {
+                    cell.selected = false;
+                }
+            }
+            return;
+        }
         this.state = {
             sudoku: [[], [], [], [], [], [], [], [], []],
             selected: undefined,

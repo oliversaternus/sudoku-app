@@ -1,7 +1,7 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonIcon, IonModal } from '@ionic/react';
 import { sync, help, trash, close } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react';
-import { Game } from '../utils/Game';
+import { Game, State } from '../utils/Game';
 import classes from "./Home.module.css";
 import clsx from 'clsx';
 
@@ -25,6 +25,10 @@ const Home: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const onResize = () => { setMaxSize(calcFieldDimension()) };
+  const alterGameState = (state: State) => {
+    localStorage.setItem('sudokuGameState', JSON.stringify(state));
+    setGameState(state);
+  };
 
   useEffect(() => window.addEventListener('resize', onResize), []);
   useEffect(() => () => window.removeEventListener('resize', onResize), []);
@@ -59,7 +63,7 @@ const Home: React.FC = () => {
                           [classes.false]: cell.value !== cell.solution
                         })}
                         style={{ fontSize: maxSize / 16, width: maxSize / 9, height: maxSize / 9 }}
-                        onClick={() => setGameState(game.selectCell(cell))}
+                        onClick={() => alterGameState(game.selectCell(cell))}
                       >
                         {cell.value || ''}
                       </td>
@@ -75,7 +79,8 @@ const Home: React.FC = () => {
               numbers.map(num =>
                 <div
                   key={num}
-                  onClick={() => setGameState(game.setValue(num))}
+                  style={num === 1 ? { borderLeft: '1px solid #202020' } : {}}
+                  onClick={() => alterGameState(game.setValue(num))}
                   className={classes.selectButton}
                 >
                   {num}
@@ -87,17 +92,17 @@ const Home: React.FC = () => {
             style={{ justifyContent: 'flex-start' }}
           >
             <div
-              className={classes.selectButton}
-              style={{ position: 'absolute', right: 6, top: 6 }}
-              onClick={() => setGameState(game.setValue(0))}
+              className={classes.specialButton}
+              style={gameState.showCheck ? { backgroundColor: '#2a58a8', borderLeft: '1px solid #202020' } : { borderLeft: '1px solid #202020' }}
+              onClick={() => alterGameState(game.toggleCheck())}
             >
               <IonIcon
-                className={classes.iconSmall}
-                icon={trash}
+                style={{ fill: gameState.showCheck ? '#ffffff' : '#202020', width: 28, height: 28 }}
+                icon={help}
               />
             </div>
             <div
-              className={classes.selectButton}
+              className={classes.specialButton}
               onClick={() => setModalOpen(true)}
             >
               <IonIcon
@@ -106,13 +111,12 @@ const Home: React.FC = () => {
               />
             </div>
             <div
-              className={classes.selectButton}
-              style={gameState.showCheck ? { backgroundColor: '#2a58a8' } : {}}
-              onClick={() => setGameState(game.toggleCheck())}
+              className={classes.specialButton}
+              onClick={() => alterGameState(game.setValue(0))}
             >
               <IonIcon
-                style={{ fill: gameState.showCheck ? '#ffffff' : '#202020', width: 28, height: 28 }}
-                icon={help}
+                className={classes.iconSmall}
+                icon={trash}
               />
             </div>
           </div>
@@ -125,9 +129,9 @@ const Home: React.FC = () => {
               onClick={() => setModalOpen(false)}
             />
             <div className={classes.modalTitle}>New Sudoku</div>
-            <div className={classes.modalDifficulty} onClick={() => { setGameState(game.reset(0.44)); setModalOpen(false); }}>Easy</div>
-            <div className={classes.modalDifficulty} onClick={() => { setGameState(game.reset(0.56)); setModalOpen(false); }}>Medium</div>
-            <div className={classes.modalDifficulty} onClick={() => { setGameState(game.reset(0.9)); setModalOpen(false); }}>Hard</div>
+            <div className={classes.modalDifficulty} onClick={() => { alterGameState(game.reset(0.44)); setModalOpen(false); }}>Easy</div>
+            <div className={classes.modalDifficulty} onClick={() => { alterGameState(game.reset(0.56)); setModalOpen(false); }}>Medium</div>
+            <div className={classes.modalDifficulty} onClick={() => { alterGameState(game.reset(0.9)); setModalOpen(false); }}>Hard</div>
           </div>
         </IonModal>
       </IonContent>

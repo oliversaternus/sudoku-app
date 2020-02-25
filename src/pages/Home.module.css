@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: calc(100% - 114px);
+    height: calc(100% - 112px);
     background-color: #e8ecf3;
   }
 
@@ -49,15 +49,16 @@
 
 .correct {
     color: green !important;
+    font-weight: bold;
   }
 
 .false {
     color: rgb(228, 18, 18) !important;
+    font-weight: bold;
   }
 
 .selected {
     background-color: #c3d2ec;
-    border-color: #c3d2ec !important;
   }
 
 .fixed {
@@ -87,10 +88,11 @@
     bottom: 0px;
     left: 0px;
     width: 100%;
-    height: 114px;
-    background-color: #ffffff;
-    box-shadow: 0px 0px 4px rgba(0,0,0,0.48);
+    height: 112px;
+    padding: 12px;
+    background-color: transparent;
     display: flex;
+    background-color: #e8ecf3;
     flex-direction: column-reverse;
     justify-content: flex-start;
     align-items: center;
@@ -100,22 +102,41 @@
     width: 100%;
     max-width: 396px;
     display: flex;
-    padding: 6px;
     justify-content: center;
     align-items: flex-end;
     position: relative;
   }
 
-.selectButton {
-    width: 40px;
-    height: 40px;
-    margin: 2px;
+.specialButton {
+    width: 132px;
+    height: 44px;
     font-size: 28px;
+    background-color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: #ffffff;
     border: 1px solid #202020;
+    border-left: none;
+    border-bottom: none;
+    cursor: pointer;
+  }
+
+  .specialButton:hover {
+    background-color: #d8e2f0;
+  }
+
+.selectButton {
+    width: 44px;
+    height: 44px;
+    font-size: 28px;
+    display: flex;
+    background-color: #ffffff;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    border: 1px solid #202020;
+    border-left: none;
     cursor: pointer;
   }
 
