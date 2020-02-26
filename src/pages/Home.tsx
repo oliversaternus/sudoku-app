@@ -1,5 +1,5 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonIcon, IonModal } from '@ionic/react';
-import { sync, help, trash, close } from 'ionicons/icons'
+import { sync, help, trash, close, star } from 'ionicons/icons'
 import React, { useEffect, useState } from 'react';
 import { Game, State } from '../utils/Game';
 import classes from "./Home.module.css";
@@ -128,10 +128,28 @@ const Home: React.FC = () => {
               icon={close}
               onClick={() => setModalOpen(false)}
             />
-            <div className={classes.modalTitle}>New Sudoku</div>
-            <div className={classes.modalDifficulty} onClick={() => { alterGameState(game.reset(0.44)); setModalOpen(false); }}>Easy</div>
-            <div className={classes.modalDifficulty} onClick={() => { alterGameState(game.reset(0.56)); setModalOpen(false); }}>Medium</div>
-            <div className={classes.modalDifficulty} onClick={() => { alterGameState(game.reset(0.9)); setModalOpen(false); }}>Hard</div>
+            <div className={classes.modalTitle}>Select Difficulty</div>
+            <div className={classes.modalDifficulty} onClick={() => { alterGameState(game.reset(0.44)); setModalOpen(false); }}>
+              <div className={classes.starContainer}>
+                <IonIcon icon={star} />
+              </div>
+              {'Easy'}
+            </div>
+            <div className={classes.modalDifficulty} onClick={() => { alterGameState(game.reset(0.56)); setModalOpen(false); }}>
+              <div className={classes.starContainer}>
+                <IonIcon icon={star} />
+                <IonIcon icon={star} />
+              </div>
+              {'Medium'}
+            </div>
+            <div className={classes.modalDifficulty} onClick={() => { alterGameState(game.reset(0.9)); setModalOpen(false); }}>
+              <div className={classes.starContainer}>
+                <IonIcon icon={star} />
+                <IonIcon icon={star} />
+                <IonIcon icon={star} />
+              </div>
+              {'Hard'}
+            </div>
           </div>
         </IonModal>
       </IonContent>

@@ -144,6 +144,15 @@
     background-color: #d8e2f0;
   }
 
+  .starContainer {
+    display: flex;
+    padding-bottom: 6px;
+  }
+
+  .modal {
+    max-width: 480px;
+  }
+
   .modalContent {
     width: 100%;
     height: 100%;
@@ -156,8 +165,8 @@
 
   .modalClose {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 12px;
+    right: 12px;
     width: 28px;
     height: 28px;
     fill: #202020;
@@ -167,9 +176,8 @@
   .modalTitle {
     width: 100%;
     text-align: center;
-    padding: 12px;
+    padding: 24px;
     font-size: 18px;
-    margin-bottom: 12px;
   }
 
   .modalDifficulty {
@@ -179,9 +187,16 @@
     background-color: #d8e2f0;
     border: 1px solid #6181b9;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     margin-bottom: 12px;
     cursor: pointer;
     color: #6181b9;
+    border-radius: 8px;
+    font-size: 18px;
+  }
+
+  .modalDifficulty:hover {
+    background-color: #c4d1e4;
   }
