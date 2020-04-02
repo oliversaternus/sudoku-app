@@ -1,6 +1,6 @@
 import React from 'react';
 import { Game, State } from '../../utils/Game';
-import classes from "./Home.module.css";
+import classes from "./Field.module.css";
 import clsx from 'clsx';
 
 interface FieldProps {
@@ -15,11 +15,15 @@ const Field: React.FC<FieldProps> = (props) => {
     const { alterGameState, game, gameState, mobile, size } = props;
 
     return (
-        <div className={classes.container}>
+        <div
+            className={classes.tableWrapper}
+            style={{ height: size - 2, width: size - 2 }}
+        >
             <table
                 className={classes.square}
+                style={{ height: size, width: size }}
             >
-                <tbody className={classes.squareContent}>
+                <tbody>
                     {gameState.sudoku.map((row, rowIndex: number) =>
                         <tr
                             key={rowIndex}
@@ -31,12 +35,13 @@ const Field: React.FC<FieldProps> = (props) => {
                                         className={clsx({
                                             [classes.cell]: true,
                                             [classes.selected]: cell.selected,
-                                            [classes.fixed]: cell.fixed
+                                            [classes.fixed]: cell.fixed,
+                                            [classes.editable]: !cell.fixed
                                         }, gameState.showCheck && !cell.fixed && cell.value && {
                                             [classes.correct]: cell.value === cell.solution,
                                             [classes.false]: cell.value !== cell.solution
                                         })}
-                                        style={{ fontSize: size / 16, width: size / 9, height: size / 9 }}
+                                        style={{ fontSize: size / 16 }}
                                         onClick={() => alterGameState(game.selectCell(cell))}
                                     >
                                         {cell.value || ''}
