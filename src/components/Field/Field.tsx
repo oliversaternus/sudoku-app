@@ -12,7 +12,7 @@ interface FieldProps {
 }
 
 const Field: React.FC<FieldProps> = (props) => {
-    const { alterGameState, game, gameState, mobile, size } = props;
+    const { alterGameState, game, gameState, size } = props;
 
     return (
         <div

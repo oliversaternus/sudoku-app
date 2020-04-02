@@ -1,5 +1,4 @@
-import { IonIcon, IonButton } from '@ionic/react';
-import { sync, help, trash } from 'ionicons/icons'
+import { IonButton } from '@ionic/react';
 import React from 'react';
 import Eraser from '../Icons/Eraser';
 import Invention from '../Icons/Invention';

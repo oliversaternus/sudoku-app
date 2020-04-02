@@ -1,10 +1,9 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonAlert } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { Game, State } from '../utils/Game';
 import classes from "./Home.module.css";
 import Field from '../components/Field/Field';
 import Controls from '../components/Controls/Controls';
-import Modal from '../components/Modal/Modal';
 import clsx from 'clsx';
 
 const game = new Game();
@@ -23,11 +22,14 @@ const Home: React.FC = () => {
   const onResize = () => {
     setSize({ width: window.innerWidth, height: window.innerHeight - 56 });
   };
-  const onModalClose = () => setModalOpen(false);
   const alterGameState = (state: State) => {
     localStorage.setItem('sudokuGameState', JSON.stringify(state));
     setGameState(state);
   };
+  const newGame = (difficulty: number) => () => {
+    alterGameState(game.reset(difficulty));
+    setModalOpen(false);
+};
 
   useEffect(() => window.addEventListener('resize', onResize), []);
   useEffect(() => () => window.removeEventListener('resize', onResize), []);
@@ -57,12 +59,26 @@ const Home: React.FC = () => {
             width={mobile ? (size.width < 385 ? size.width - 24 : 360) : 180}
             height={mobile ? 148 : 448}
           />
-          <Modal
-            game={game}
-            alterGameState={alterGameState}
-            open={modalOpen}
-            onClose={onModalClose}
-          />
+          <IonAlert
+            isOpen={modalOpen}
+            onDidDismiss={() => setModalOpen(false)}
+            header={'New Game'}
+            message={'Select the difficulty level for the new Sudoku.'}
+            mode="md"
+            buttons={[
+                {
+                    text: 'Easy',
+                    handler: newGame(0.44)
+                },
+                {
+                    text: 'Medium',
+                    handler: newGame(0.56)
+                },
+                {
+                    text: 'Hard',
+                    handler: newGame(0.9)
+                }
+            ]} />
         </div>
       </IonContent>
     </IonPage>
