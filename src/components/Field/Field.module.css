@@ -35,7 +35,7 @@
 
 .correct {
     color: rgb(0, 165, 0) !important;
-    background-color: rgb(217, 243, 217);
+    background-color: rgb(217, 243, 217) !important;
   }
 
   .cell:nth-child(3n) {
@@ -44,19 +44,23 @@
 
 .false {
     color: rgb(228, 18, 18) !important;
-    background-color: rgb(243, 210, 210);
+    background-color: rgb(243, 210, 210) !important;
   }
 
 .selected {
-  background-color: #d9e1ec;
+  background-color: #c1d0e7 !important;
   }
+
+  .highlighted {
+    background-color: #f0f2f7;
+    }
 
 .fixed {
     cursor: auto;
   }
 
 .editable:hover {
-  background-color: #d9e1ec;
+  background-color: #c1d0e7;
 }
 
 .square {

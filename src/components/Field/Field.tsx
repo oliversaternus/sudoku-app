@@ -29,23 +29,30 @@ const Field: React.FC<FieldProps> = (props) => {
                             key={rowIndex}
                             className={classes.row}
                         >{
-                                row.map((cell, colIndex: number) =>
-                                    <td
-                                        key={colIndex}
-                                        className={clsx({
-                                            [classes.cell]: true,
-                                            [classes.selected]: cell.selected,
-                                            [classes.fixed]: cell.fixed,
-                                            [classes.editable]: !cell.fixed
-                                        }, gameState.showCheck && !cell.fixed && cell.value && {
-                                            [classes.correct]: cell.value === cell.solution,
-                                            [classes.false]: cell.value !== cell.solution
-                                        })}
-                                        style={{ fontSize: size / 16 }}
-                                        onClick={() => alterGameState(game.selectCell(cell))}
-                                    >
-                                        {cell.value || ''}
-                                    </td>
+                                row.map((cell, colIndex: number) => {
+                                    const highlighted =
+                                        gameState.selected?.row === cell.row ||
+                                        gameState.selected?.col === cell.col ||
+                                        gameState.selected?.block === cell.block;
+                                    return (
+                                        <td
+                                            key={colIndex}
+                                            className={clsx({
+                                                [classes.cell]: true,
+                                                [classes.highlighted]: highlighted,
+                                                [classes.selected]: cell.selected,
+                                                [classes.fixed]: cell.fixed,
+                                                [classes.editable]: !cell.fixed
+                                            }, gameState.showCheck && !cell.fixed && cell.value && {
+                                                [classes.correct]: cell.value === cell.solution,
+                                                [classes.false]: cell.value !== cell.solution
+                                            })}
+                                            style={{ fontSize: size / 16 }}
+                                            onClick={() => alterGameState(game.selectCell(cell))}
+                                        >
+                                            {cell.value || ''}
+                                        </td>)
+                                }
                                 )
                             }
                         </tr>)}

@@ -3,6 +3,7 @@ import { Sudoku } from "./Sudoku";
 export interface Cell {
     row: number;
     col: number;
+    block: number;
     selected: boolean;
     solution: number;
     value: number;
@@ -56,6 +57,7 @@ export class Game {
                 this.state.sudoku[i].push({
                     row: i,
                     col: j,
+                    block: Math.floor(i / 3) * 3 + Math.floor(j / 3),
                     selected: false,
                     solution: solution.values[i][j],
                     value: 0,

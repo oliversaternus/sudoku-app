@@ -9,7 +9,6 @@ import clsx from 'clsx';
 const game = new Game();
 
 const roundSize = (num: number) => {
-  console.log(Math.floor(num / 4) * 4);
   return Math.floor(num / 4) * 4;
 };
 
@@ -29,7 +28,7 @@ const Home: React.FC = () => {
   const newGame = (difficulty: number) => () => {
     alterGameState(game.reset(difficulty));
     setModalOpen(false);
-};
+  };
 
   useEffect(() => window.addEventListener('resize', onResize), []);
   useEffect(() => () => window.removeEventListener('resize', onResize), []);
@@ -38,7 +37,12 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar color="primary">
-          <IonTitle>Sudoku</IonTitle>
+          <IonTitle>
+            <div className={classes.navigation}>
+              <img alt="logo" src="assets/icon/favicon.png" width="32px" height="32px" />
+              <div className={classes.titleText}>Sudoku</div>
+            </div>
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -63,21 +67,21 @@ const Home: React.FC = () => {
             isOpen={modalOpen}
             onDidDismiss={() => setModalOpen(false)}
             header={'New Game'}
-            message={'Select the difficulty level for the new Sudoku.'}
+            message={'Select a difficulty level for the new Sudoku.'}
             mode="md"
             buttons={[
-                {
-                    text: 'Easy',
-                    handler: newGame(0.44)
-                },
-                {
-                    text: 'Medium',
-                    handler: newGame(0.56)
-                },
-                {
-                    text: 'Hard',
-                    handler: newGame(0.9)
-                }
+              {
+                text: 'Easy',
+                handler: newGame(0.44)
+              },
+              {
+                text: 'Medium',
+                handler: newGame(0.56)
+              },
+              {
+                text: 'Hard',
+                handler: newGame(0.9)
+              }
             ]} />
         </div>
       </IonContent>

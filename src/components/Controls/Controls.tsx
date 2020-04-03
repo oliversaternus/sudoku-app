@@ -32,6 +32,7 @@ const Controls: React.FC<ControlsProps> = (props) => {
                             onClick={() => alterGameState(game.setValue(num))}
                             style={
                                 {
+                                    ...(mobile ? { fontSize: width / 14 } : {}),
                                     ...(num === 1 && mobile ? { borderLeft: '1px solid #a0a7af' } : {}),
                                     ...((num - 1) % 3 === 0 && !mobile ? { borderLeft: '1px solid #a0a7af' } : {}),
                                     ...(num < 7 && !mobile ? { borderBottom: 'none' } : {}),
